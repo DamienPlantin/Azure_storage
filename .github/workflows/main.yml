@@ -28,10 +28,10 @@ jobs:
         
     - name: auto pdoc
       run: |
-        pdoc3 --html -o tmp multitransport/
+        pdoc3 --html -o tmp /
         rm -rf docs
         mkdir -p docs/
-        mv tmp/back/* docs/
+        mv tmp/* docs/
         rm -rf tmp/
     - name: Commit files
       run: |
