@@ -11,8 +11,14 @@ def listb(args, containerclient):
     Liste le contenu du blob
     cmd : python main.py list
     """
+    logging.info(
+        f"Affichage de la liste du conteneur {config['storage']['container']}"
+        )
     blob_list = containerclient.list_blobs()
     for blob in blob_list:
+        logging.info(
+            f"Contenu de {config['storage']['container']}: {blob.name}"
+            )
         print(blob.name)
 
 
@@ -23,6 +29,10 @@ def upload(cible, blobclient):
     Ecrasement du fichier s'il existe dans le conteneur
     cmd : python main.py upload 'chemin d'accès avec nom du/des fichier'
     """
+    logging.debug(f"Connexion réussi, compte {}")
+    logging.info(
+        f"Affichage de la liste du conteneur {config['storage']['container']}"
+        )
     with open(cible, "rb") as f:
         logging.warning(
             f"Ecrasement du fichier {cible} s'il existe dans le conteneur")
@@ -88,7 +98,6 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    # erreur dans logging.warning : on a la fonction au lieu de l'entier
     loglevels = {
         "debug": logging.DEBUG,
         "info": logging.INFO,
