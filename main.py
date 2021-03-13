@@ -11,6 +11,9 @@ def listb(args, containerclient):
     Liste le contenu du blob
     cmd : python main.py list
     """
+    logging.debug(f"Compte {config['storage']['account']}")
+    logging.debug(f"Conteneur {config['storage']['container']}")
+    logging.info("Connexion réussie")
     logging.info(
         f"Affichage de la liste du conteneur {config['storage']['container']}"
         )
@@ -29,11 +32,11 @@ def upload(cible, blobclient):
     Ecrasement du fichier s'il existe dans le conteneur
     cmd : python main.py upload 'chemin d'accès avec nom du/des fichier'
     """
-    logging.debug(f"Connexion réussi, compte {}")
-    logging.info(
-        f"Affichage de la liste du conteneur {config['storage']['container']}"
-        )
+    logging.debug(f"Compte {config['storage']['account']}")
+    logging.debug(f"Conteneur {config['storage']['container']}")
+    logging.info("Connexion réussie")
     with open(cible, "rb") as f:
+        logging.info(f"Upload du fichier {cible} vers le conteneur")
         logging.warning(
             f"Ecrasement du fichier {cible} s'il existe dans le conteneur")
         blobclient.upload_blob(f, overwrite=True)
@@ -45,9 +48,15 @@ def download(filename, dl_folder, blobclient):
     Il faut préciser le ou les fichiers à télécharger
     cmd : python main.py download 'nom du/des fichiers'
     """
+    logging.debug(f"Compte {config['storage']['account']}")
+    logging.debug(f"Conteneur {config['storage']['container']}")
+    logging.info("Connexion réussie")
     with open(os.path.join(dl_folder, filename), "wb") as my_blob:
+        logging.info(f"Téléchargement de {filename} vers \
+{config['general']['restoredir']}")
         logging.warning(
-            f"Ecrasement du fichier {dl_folder} s'il existe dans le conteneur")
+            f"Ecrasement du fichier {filename} s'il existe dans \
+{config['general']['restoredir']}")
         blob_data = blobclient.download_blob()
         blob_data.readinto(my_blob)
 
@@ -64,6 +73,7 @@ def main(args, config):
         logging_enable=False)
     containerclient = blobclient.get_container_client(
         config["storage"]["container"])
+    logging.info(f"Argument appelé {args}")
     if args.action == "list":
         return listb(args, containerclient)
     else:
