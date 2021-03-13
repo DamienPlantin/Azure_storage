@@ -20,10 +20,13 @@ def upload(cible, blobclient):
     """
     Permet d'envoyer un ou plusieurs fichiers vers le blob en spécifiant
     le chemin d'accès du ou des fichiers
+    Ecrasement du fichier s'il existe dans le conteneur
     cmd : python main.py upload 'chemin d'accès avec nom du/des fichier'
     """
     with open(cible, "rb") as f:
-        blobclient.upload_blob(f)
+        logging.warning(
+            f"Ecrasement du fichier {cible} s'il existe dans le conteneur")
+        blobclient.upload_blob(f, overwrite=True)
 
 
 def download(filename, dl_folder, blobclient):
@@ -33,6 +36,8 @@ def download(filename, dl_folder, blobclient):
     cmd : python main.py download 'nom du/des fichiers'
     """
     with open(os.path.join(dl_folder, filename), "wb") as my_blob:
+        logging.warning(
+            f"Ecrasement du fichier {dl_folder} s'il existe dans le conteneur")
         blob_data = blobclient.download_blob()
         blob_data.readinto(my_blob)
 
