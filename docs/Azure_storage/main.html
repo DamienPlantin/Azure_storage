@@ -39,8 +39,17 @@ def listb(args, containerclient):
     Liste le contenu du blob
     cmd : python main.py list
     &#34;&#34;&#34;
+    logging.debug(f&#34;Compte {config[&#39;storage&#39;][&#39;account&#39;]}&#34;)
+    logging.debug(f&#34;Conteneur {config[&#39;storage&#39;][&#39;container&#39;]}&#34;)
+    logging.info(&#34;Connexion réussie&#34;)
+    logging.info(
+        f&#34;Affichage de la liste du conteneur {config[&#39;storage&#39;][&#39;container&#39;]}&#34;
+        )
     blob_list = containerclient.list_blobs()
     for blob in blob_list:
+        logging.info(
+            f&#34;Contenu de {config[&#39;storage&#39;][&#39;container&#39;]}: {blob.name}&#34;
+            )
         print(blob.name)
 
 
@@ -48,10 +57,17 @@ def upload(cible, blobclient):
     &#34;&#34;&#34;
     Permet d&#39;envoyer un ou plusieurs fichiers vers le blob en spécifiant
     le chemin d&#39;accès du ou des fichiers
+    Ecrasement du fichier s&#39;il existe dans le conteneur
     cmd : python main.py upload &#39;chemin d&#39;accès avec nom du/des fichier&#39;
     &#34;&#34;&#34;
+    logging.debug(f&#34;Compte {config[&#39;storage&#39;][&#39;account&#39;]}&#34;)
+    logging.debug(f&#34;Conteneur {config[&#39;storage&#39;][&#39;container&#39;]}&#34;)
+    logging.info(&#34;Connexion réussie&#34;)
     with open(cible, &#34;rb&#34;) as f:
-        blobclient.upload_blob(f)
+        logging.info(f&#34;Upload du fichier {cible} vers le conteneur&#34;)
+        logging.warning(
+            f&#34;Ecrasement du fichier {cible} s&#39;il existe dans le conteneur&#34;)
+        blobclient.upload_blob(f, overwrite=True)
 
 
 def download(filename, dl_folder, blobclient):
@@ -60,7 +76,15 @@ def download(filename, dl_folder, blobclient):
     Il faut préciser le ou les fichiers à télécharger
     cmd : python main.py download &#39;nom du/des fichiers&#39;
     &#34;&#34;&#34;
+    logging.debug(f&#34;Compte {config[&#39;storage&#39;][&#39;account&#39;]}&#34;)
+    logging.debug(f&#34;Conteneur {config[&#39;storage&#39;][&#39;container&#39;]}&#34;)
+    logging.info(&#34;Connexion réussie&#34;)
     with open(os.path.join(dl_folder, filename), &#34;wb&#34;) as my_blob:
+        logging.info(f&#34;Téléchargement de {filename} vers \
+{config[&#39;general&#39;][&#39;restoredir&#39;]}&#34;)
+        logging.warning(
+            f&#34;Ecrasement du fichier {filename} s&#39;il existe dans \
+{config[&#39;general&#39;][&#39;restoredir&#39;]}&#34;)
         blob_data = blobclient.download_blob()
         blob_data.readinto(my_blob)
 
@@ -77,6 +101,7 @@ def main(args, config):
         logging_enable=False)
     containerclient = blobclient.get_container_client(
         config[&#34;storage&#34;][&#34;container&#34;])
+    logging.info(f&#34;Argument appelé {args}&#34;)
     if args.action == &#34;list&#34;:
         return listb(args, containerclient)
     else:
@@ -111,7 +136,6 @@ if __name__ == &#34;__main__&#34;:
 
     args = parser.parse_args()
 
-    # erreur dans logging.warning : on a la fonction au lieu de l&#39;entier
     loglevels = {
         &#34;debug&#34;: logging.DEBUG,
         &#34;info&#34;: logging.INFO,
@@ -152,7 +176,15 @@ cmd : python main.py download 'nom du/des fichiers'</p></div>
     Il faut préciser le ou les fichiers à télécharger
     cmd : python main.py download &#39;nom du/des fichiers&#39;
     &#34;&#34;&#34;
+    logging.debug(f&#34;Compte {config[&#39;storage&#39;][&#39;account&#39;]}&#34;)
+    logging.debug(f&#34;Conteneur {config[&#39;storage&#39;][&#39;container&#39;]}&#34;)
+    logging.info(&#34;Connexion réussie&#34;)
     with open(os.path.join(dl_folder, filename), &#34;wb&#34;) as my_blob:
+        logging.info(f&#34;Téléchargement de {filename} vers \
+{config[&#39;general&#39;][&#39;restoredir&#39;]}&#34;)
+        logging.warning(
+            f&#34;Ecrasement du fichier {filename} s&#39;il existe dans \
+{config[&#39;general&#39;][&#39;restoredir&#39;]}&#34;)
         blob_data = blobclient.download_blob()
         blob_data.readinto(my_blob)</code></pre>
 </details>
@@ -172,8 +204,17 @@ cmd : python main.py list</p></div>
     Liste le contenu du blob
     cmd : python main.py list
     &#34;&#34;&#34;
+    logging.debug(f&#34;Compte {config[&#39;storage&#39;][&#39;account&#39;]}&#34;)
+    logging.debug(f&#34;Conteneur {config[&#39;storage&#39;][&#39;container&#39;]}&#34;)
+    logging.info(&#34;Connexion réussie&#34;)
+    logging.info(
+        f&#34;Affichage de la liste du conteneur {config[&#39;storage&#39;][&#39;container&#39;]}&#34;
+        )
     blob_list = containerclient.list_blobs()
     for blob in blob_list:
+        logging.info(
+            f&#34;Contenu de {config[&#39;storage&#39;][&#39;container&#39;]}: {blob.name}&#34;
+            )
         print(blob.name)</code></pre>
 </details>
 </dd>
@@ -200,6 +241,7 @@ En fonction de l'argument, appel la fonction associée</p></div>
         logging_enable=False)
     containerclient = blobclient.get_container_client(
         config[&#34;storage&#34;][&#34;container&#34;])
+    logging.info(f&#34;Argument appelé {args}&#34;)
     if args.action == &#34;list&#34;:
         return listb(args, containerclient)
     else:
@@ -220,6 +262,7 @@ En fonction de l'argument, appel la fonction associée</p></div>
 <dd>
 <div class="desc"><p>Permet d'envoyer un ou plusieurs fichiers vers le blob en spécifiant
 le chemin d'accès du ou des fichiers
+Ecrasement du fichier s'il existe dans le conteneur
 cmd : python main.py upload 'chemin d'accès avec nom du/des fichier'</p></div>
 <details class="source">
 <summary>
@@ -229,10 +272,17 @@ cmd : python main.py upload 'chemin d'accès avec nom du/des fichier'</p></div>
     &#34;&#34;&#34;
     Permet d&#39;envoyer un ou plusieurs fichiers vers le blob en spécifiant
     le chemin d&#39;accès du ou des fichiers
+    Ecrasement du fichier s&#39;il existe dans le conteneur
     cmd : python main.py upload &#39;chemin d&#39;accès avec nom du/des fichier&#39;
     &#34;&#34;&#34;
+    logging.debug(f&#34;Compte {config[&#39;storage&#39;][&#39;account&#39;]}&#34;)
+    logging.debug(f&#34;Conteneur {config[&#39;storage&#39;][&#39;container&#39;]}&#34;)
+    logging.info(&#34;Connexion réussie&#34;)
     with open(cible, &#34;rb&#34;) as f:
-        blobclient.upload_blob(f)</code></pre>
+        logging.info(f&#34;Upload du fichier {cible} vers le conteneur&#34;)
+        logging.warning(
+            f&#34;Ecrasement du fichier {cible} s&#39;il existe dans le conteneur&#34;)
+        blobclient.upload_blob(f, overwrite=True)</code></pre>
 </details>
 </dd>
 </dl>
