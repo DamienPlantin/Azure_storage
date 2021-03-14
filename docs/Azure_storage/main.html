@@ -29,9 +29,12 @@
 <pre><code class="python">import sys
 import argparse
 import configparser
+# configparser : lien avec le fichier config.ini
 import logging
 import os.path
 from azure.storage.blob import BlobServiceClient
+# BlobServiceClient : permet de manipuler les ressources de stockage Azure
+# et les conteneurs blob.
 
 
 def listb(args, containerclient):
@@ -117,6 +120,7 @@ def main(args, config):
 
 
 if __name__ == &#34;__main__&#34;:
+    # Définition des différents arguments à rentrer en ligne de commande
     parser = argparse.ArgumentParser(&#34;Logiciel d&#39;archivage de documents&#34;)
     parser.add_argument(
         &#34;-cfg&#34;,
